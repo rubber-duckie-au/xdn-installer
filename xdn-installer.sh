@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 SCRIPTVER=1.0.2
 CONFIG_FILE='DigitalNote.conf'
