@@ -553,17 +553,17 @@ clear
 echo -e " "
 echo -e "${YELLOW}Welcome to the linux installer for ${PURPLEB}DigitalNote (XDN)${NC}..."
 echo -e " "
-echo -e "                      ${PURPLEB}███████  ${WHITE}${Bold}███████  ███████"
-echo -e "                      ${PURPLEB}███████  ${WHITE}${Bold}███████  ███████"
-echo -e "                      ${PURPLEB}███████  ${WHITE}${Bold}███████  ███████"
+echo -e "                      ${PURPLEB}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                      ${PURPLEB}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                      ${PURPLEB}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
 echo -e "								   "
-echo -e "                     ${PURPLEB}          ███████  ${WHITE}${Bold}███████"
-echo -e "                     ${PURPLEB}          ███████  ${WHITE}${Bold}███████"
-echo -e "                     ${PURPLEB}          ███████  ${WHITE}${Bold}███████"
+echo -e "                     ${PURPLEB}          â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                     ${PURPLEB}          â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                     ${PURPLEB}          â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ  ${WHITE}${Bold}â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
 echo -e "                      							"
-echo -e "	 	     ${PURPLEB}                   ███████"
-echo -e "                     ${PURPLEB}                   ███████"
-echo -e "                     ${PURPLEB}                   ███████"
+echo -e "	 	     ${PURPLEB}                   â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                     ${PURPLEB}                   â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
+echo -e "                     ${PURPLEB}                   â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ"
 
 echo -e " "
  echo -e "${BLUE}================================================================${NC}"
@@ -818,5 +818,3 @@ important_information
 
 ##### Main #####
 mainmenu2
-
-
