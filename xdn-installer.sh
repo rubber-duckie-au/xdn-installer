@@ -66,6 +66,7 @@ BgLtBlue='\E[104m'
 BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
+
 function purgeOldInstallation() {
 echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
 if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
