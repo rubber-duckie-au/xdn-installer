@@ -66,7 +66,8 @@ BgLtBlue='\E[104m'
 BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
-function purgeOldInstallation(){
+
+function purgeOldInstallation() {
 echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
 if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
     echo -e "Exists, making backup${NC}" 
@@ -76,8 +77,7 @@ fi
     cp  $(eval echo $CFFULLPATH $COIN_BACKUP ) 2> /dev/null
     cp  $(eval echo $CONFIGFOLDER/DigitalNote.conf $COIN_BACKUP ) 2> /dev/null
     cp $(eval echo $CONFIGFOLDER/wallet.dat $COIN_BACKUP ) 2> /dev/null
-fi 
-
+fi
     #kill wallet daemon
     $COIN_DAEMON stop > /dev/null 2>&1
     #sudo killall $COIN_DAEMON > /dev/null 2>&1
