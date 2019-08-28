@@ -15,7 +15,6 @@ COIND_COMMAND=$(eval echo $COIN_PATH$COIN_DAEMON)
 STARTCMD=$(eval echo $COIND_COMMAND)
 STOPCMD=$(eval echo $COIND_COMMAND stop)
 PFile=$(eval echo $CONFIGFOLDER/$COIN_NAME.pid)
-
 NODEIP=$(curl -s4 icanhazip.com)
 WHITE="\033[0;37m"
 BLUE="\033[0;34m"
@@ -67,8 +66,7 @@ BgLtBlue='\E[104m'
 BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
-
-function purgeOldInstallation() {
+function purgeOldInstallation(){
 echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
 if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
     echo -e "Exists, making backup${NC}" 
