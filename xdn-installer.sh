@@ -26,7 +26,7 @@ PURPLE="\033[0;35m"
 PURPLEB="\033[1;35m"
 RED='\033[0;31m'
 GREEN="\033[0;32m"
-UGREEN="\033[4;32m" 
+UGREEN="\033[4;32m"
 NC='\033[0m'
 Off='\E[0m'
 Bold='\E[1m'
@@ -68,10 +68,9 @@ BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
 
-
 function purgeOldInstallation() {
-    echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
-    if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
+echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
+if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
     echo -e "Exists, making backup${NC}" 
 if [[ ! -d $(eval echo $COIN_BACKUP) ]]; then    
 mkdir $(eval echo $COIN_BACKUP)
