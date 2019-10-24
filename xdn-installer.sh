@@ -307,6 +307,15 @@ addnode=157.230.107.144:18092
 addnode=138.197.161.183:18092
 addnode=188.166.123.46:18092
 addnode=159.203.14.113:18092
+addnode=31.171.244.174:18092
+addnode=209.189.77.193:18092
+addnode=104.248.186.130:18:18092
+addnode=104.248.186.130:18092
+addnode=142.44.198.11:18092
+addnode=142.44.198.13:18092
+addnode=142.44.198.148:18092
+addnode=142.44.198.176:18092
+addnode=142.44.198.177:18092
 EOF
 
 echo -e "Done"
@@ -360,7 +369,6 @@ MASTERNODEIP=$(eval echo $NODEIP:$COIN_PORT)
   cat << EOF > $(eval echo $CONFIGFOLDER/$CONFIG_FILE)
 listen=1
 server=1
-daemon=1
 testnet=0
 rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
@@ -372,6 +380,15 @@ addnode=157.230.107.144:18092
 addnode=138.197.161.183:18092
 addnode=188.166.123.46:18092
 addnode=159.203.14.113:18092
+addnode=31.171.244.174:18092
+addnode=209.189.77.193:18092
+addnode=104.248.186.130:18:18092
+addnode=104.248.186.130:18092
+addnode=142.44.198.11:18092
+addnode=142.44.198.13:18092
+addnode=142.44.198.148:18092
+addnode=142.44.198.176:18092
+addnode=142.44.198.177:18092
 EOF
 
 echo -e "Done"
