@@ -448,7 +448,7 @@ function enable_firewall() {
   sudo ufw limit ftp/tcp  comment "Rate limit for ftp server"
   sudo ufw allow $COIN_PORT/tcp comment "$COIN_NAME MN port"
   sudo ufw logging on
-  echo "y" | ufw enable >/dev/null 2>&1
+  sudo ufw --force enable 
 }
 
 
