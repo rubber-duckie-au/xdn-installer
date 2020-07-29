@@ -440,15 +440,15 @@ fi
 
 function enable_firewall() {
   echo -e "Installing and setting up firewall to allow ingress on port ${GREEN}$COIN_PORT${NC}"
-  sudo ufw default deny incoming
-  sudo ufw default allow outgoing
-  sudo ufw allow ssh/tcp
-  sudo ufw limit ssh/tcp  comment "Rate limit for openssh server"
-  sudo ufw allow ftp
-  sudo ufw limit ftp/tcp  comment "Rate limit for ftp server"
-  sudo ufw allow $COIN_PORT/tcp comment "$COIN_NAME MN port"
-  sudo ufw logging on
-  sudo ufw --force enable 
+  sudo ufw default deny incoming;
+  sudo ufw default allow outgoing;
+  sudo ufw allow ssh/tcp;
+  sudo ufw limit ssh/tcp  comment "Rate limit for openssh server";
+  sudo ufw allow ftp;
+  sudo ufw limit ftp/tcp  comment "Rate limit for ftp server";
+  sudo ufw allow $COIN_PORT/tcp comment "$COIN_NAME MN port";
+  sudo ufw logging on;
+  sudo ufw --force enable;
 }
 
 
