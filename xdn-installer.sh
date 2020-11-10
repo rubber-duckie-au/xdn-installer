@@ -191,7 +191,7 @@ function download_node() {
   echo -e " "
   sleep 5
   cd ~
-  git clone $COIN_GIT
+  git clone -b release --single-branch $COIN_GIT
   echo -e " "
   echo -e " "
   echo -e " "
