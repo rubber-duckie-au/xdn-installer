@@ -322,19 +322,24 @@ externalip=$NODEIP
 bind=$NODEIP
 masternodeaddr=$MASTERNODEIP
 masternodeprivkey=$COINKEY
-addnode=157.230.107.144:18092
-addnode=138.197.161.183:18092
-addnode=188.166.123.46:18092
-addnode=159.203.14.113:18092
-addnode=31.171.244.174:18092
-addnode=209.189.77.193:18092
-addnode=104.248.186.130:18:18092
-addnode=104.248.186.130:18092
-addnode=142.44.198.11:18092
-addnode=142.44.198.13:18092
-addnode=142.44.198.148:18092
-addnode=142.44.198.176:18092
-addnode=142.44.198.177:18092
+addnode=seed1n.digitalnote.biz
+addnode=seed2n.digitalnote.biz
+addnode=seed3n.digitalnote.biz
+addnode=seed4n.digitalnote.biz
+addnode=192.241.147.56
+addnode=20.193.89.74
+addnode=161.97.92.102
+addnode=62.171.150.246:18062
+addnode=62.171.150.246:18064
+addnode=161.97.106.85:18060
+addnode=161.97.106.85:18061
+addnode=161.97.106.85:18062
+addnode=161.97.106.85:18063
+addnode=62.171.150.246:18093
+addnode=62.171.150.246:18066
+addnode=62.171.150.246:18068
+addnode=62.171.150.246:18070
+addnode=62.171.150.246:18072
 EOF
 
 echo -e "Done"
