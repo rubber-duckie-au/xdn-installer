@@ -157,11 +157,34 @@ function download_node() {
   sleep 5
   apt update > /dev/null 2>&1
   cd ~
-  sudo apt-get install -y ntp git build-essential libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev libcurl4-openssl-dev curl libzip-dev; apt-get update -y
-  apt-get install -y git make automake build-essential libboost-all-dev
-  apt-get install -y yasm binutils libcurl4-openssl-dev openssl libssl-dev
-  sudo apt-get install -y libgmp-dev 
+  sudo apt-get install -y ntp
+  sudo apt-get install -y git
+  sudo apt-get install -y build-essential
+  sudo apt-get install -y libssl-dev
+  sudo apt-get install -y libdb-dev
+  sudo apt-get install -y libdb++-dev
+  sudo apt-get install -y libboost-all-dev
+  sudo apt-get install -y libqrencode-dev
+  sudo apt-get install -y libcurl4-openssl-dev
+  sudo apt-get install -y curl
+  sudo apt-get install -y libzip-dev
+  
+  sudo apt-get update -y
+  
+  sudo apt-get install -y git
+  sudo apt-get install -y make
+  sudo apt-get install -y automake
+  sudo apt-get install -y yasm
+  sudo apt-get install -y binutils
+  sudo apt-get install -y libcurl4-openssl-dev
+  sudo apt-get install -y openssl
+  sudo apt-get install -y libgmp-dev
   sudo apt-get install -y libtool
+  sudo apt-get install -y qt5-default
+  sudo apt-get install -y qttools5-dev-tools
+  sudo apt-get install -y miniupnpc
+  sudo apt-get install -y qt5-qmake
+  sudo apt-get install -y libevent-dev
 
   echo -e " "
   echo -e " "
@@ -175,7 +198,7 @@ function download_node() {
   wget http://download.oracle.com/berkeley-db/db-6.2.32.NC.tar.gz
   tar zxf db-6.2.32.NC.tar.gz
   cd db-6.2.32.NC/build_unix
-  ../dist/configure --enable-cxx
+  ../dist/configure --enable-cxx --disable-shared
   make
   sudo make install
   sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb-6.2.so /usr/lib/libdb-6.2.so
@@ -202,15 +225,10 @@ function download_node() {
   echo -e " "
   sleep 5
   cd ~
-  cd ~/DigitalNote/src 
-  chmod a+x obj
-  chmod a+x leveldb/build_detect_platform
-  chmod a+x secp256k1; chmod a+x leveldb
-  chmod a+x ~/DigitalNote/src
-  chmod a+x ~/DigitalNote
-  make -f makefile.unix USE_UPNP=-
-  cd ~
-  cp -r ~/DigitalNote/src/DigitalNoted /usr/local/bin/DigitalNoted
+  cd ~/DigitalNote
+  qmake -qt=qt5 DigitalNote.daemon.pro
+  make -j 4
+  sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
 
 }
 
