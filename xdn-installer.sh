@@ -563,7 +563,7 @@ fi
  echo -e "${BLUE}================================================================${NC}"
  echo -e "${YELLOW}Donations always accepted gratefully.${NC}"
  echo -e "${BLUE}================================================================${NC}"
- echo -e "${YELLOW}Rubber-Duckie: ${WHITE}dS3voFtYMohSD1nPfqamwXRHLQnvipam7e${NC}"
+ echo -e "${YELLOW}Rubber-Duckie: ${WHITE}dN4BYnVE8dBxRUbuBaLzguYdy3AjbmowsE${NC}"
  echo -e "${BLUE}================================================================${NC}"
 
 
