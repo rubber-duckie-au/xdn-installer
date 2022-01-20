@@ -67,6 +67,7 @@ BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
 
+
 function purgeOldInstallation() {
 echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
 if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
@@ -82,7 +83,7 @@ fi
     $COIN_DAEMON stop > /dev/null 2>&1
     #sudo killall $COIN_DAEMON > /dev/null 2>&1
 	# Save Key
-	if [! $JUSTWALLET ]; then
+	if [[ ! $JUSTWALLET ]]; then
 	OLDKEY=$(awk -F'=' '/masternodeprivkey/ {print $2}' $CFFULLPATH 2> /dev/null)
 	if [[ $OLDKEY ]]; then
     		echo -e "${CYAN}Saving Old Installation Genkey ${WHITE} $OLDKEY"
@@ -319,27 +320,30 @@ rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
 masternode=1 
 externalip=$NODEIP
-bind=$NODEIP
 masternodeaddr=$MASTERNODEIP
 masternodeprivkey=$COINKEY
-addnode=seed1n.digitalnote.biz
-addnode=seed2n.digitalnote.biz
-addnode=seed3n.digitalnote.biz
-addnode=seed4n.digitalnote.biz
+addnode=103.164.54.203
 addnode=192.241.147.56
 addnode=20.193.89.74
 addnode=161.97.92.102
-addnode=62.171.150.246:18062
-addnode=62.171.150.246:18064
 addnode=161.97.106.85:18060
 addnode=161.97.106.85:18061
 addnode=161.97.106.85:18062
 addnode=161.97.106.85:18063
-addnode=62.171.150.246:18093
+addnode=95.111.225.123:18063
+addnode=95.111.225.123:18092
+addnode=62.171.150.246:18060
+addnode=62.171.150.246:18062
+addnode=62.171.150.246:18064
 addnode=62.171.150.246:18066
 addnode=62.171.150.246:18068
 addnode=62.171.150.246:18070
 addnode=62.171.150.246:18072
+addnode=62.171.150.246:18093
+addnode=seed1n.digitalnote.biz
+addnode=seed2n.digitalnote.biz
+addnode=seed3n.digitalnote.biz
+addnode=seed4n.digitalnote.biz
 EOF
 
 echo -e "Done"
@@ -400,19 +404,28 @@ rpcport=18094
 port=$COIN_PORT
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
-addnode=157.230.107.144:18092
-addnode=138.197.161.183:18092
-addnode=188.166.123.46:18092
-addnode=159.203.14.113:18092
-addnode=31.171.244.174:18092
-addnode=209.189.77.193:18092
-addnode=104.248.186.130:18:18092
-addnode=104.248.186.130:18092
-addnode=142.44.198.11:18092
-addnode=142.44.198.13:18092
-addnode=142.44.198.148:18092
-addnode=142.44.198.176:18092
-addnode=142.44.198.177:18092
+addnode=103.164.54.203
+addnode=192.241.147.56
+addnode=20.193.89.74
+addnode=161.97.92.102
+addnode=161.97.106.85:18060
+addnode=161.97.106.85:18061
+addnode=161.97.106.85:18062
+addnode=161.97.106.85:18063
+addnode=95.111.225.123:18063
+addnode=95.111.225.123:18092
+addnode=62.171.150.246:18060
+addnode=62.171.150.246:18062
+addnode=62.171.150.246:18064
+addnode=62.171.150.246:18066
+addnode=62.171.150.246:18068
+addnode=62.171.150.246:18070
+addnode=62.171.150.246:18072
+addnode=62.171.150.246:18093
+addnode=seed1n.digitalnote.biz
+addnode=seed2n.digitalnote.biz
+addnode=seed3n.digitalnote.biz
+addnode=seed4n.digitalnote.biz
 EOF
 
 echo -e "Done"
@@ -452,6 +465,32 @@ fi
 	fi
 	
 #clear
+}
+
+function apply_bootstrap() {
+clear
+echo -e " "
+echo -e "${RED}$COIN_NAME ${YELLOW}Apply Chain Bootstrap${NC}."
+echo -e "============================================================="
+echo -e "${YELLOW}Apply the recent ${RED}$COIN_NAME ${YELLOW}Bootstrap File?${NC}."
+echo -e "${WHITE}This will reduce initial sync time drastically for new installs${NC}"
+echo -e "${RED}WARNING - On an existing build, this will overwrite the existing chain (not your wallet file)${NC}"
+echo -e " "
+echo -e " "
+read -rp "Apply Blockchain Bootstrap? [Y/n]: " bootstrap_apply
+ if [[ ("$bootstrap_apply" == "y" || "$bootstrap_apply" == "Y" || "$bootstrap_apply" == "") ]]; then
+sudo rm -f -r $CONFIGFOLDER/blocks
+sudo rm -f -r $CONFIGFOLDER/database
+sudo rm -f -r $CONFIGFOLDER/txleveldb
+sudo rm -f $CONFIGFOLDER/blk0001.dat
+cd ~; 
+wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.0/XDN_bootstrap.tar.gz
+sudo tar -zvxf XDN_bootstrap.tar.gz --directory $CONFIGFOLDER
+echo -e "${GREEN} $COIN_NAME Bootstrap Application Complete!!${NC}."
+sleep 10
+fi
+sudo chown -R $USER:$USER $CONFIGFOLDER
+
 }
 
 function wallet_replace() {
@@ -831,6 +870,7 @@ download_node
 get_ip
 create_wallet_config
 wallet_replace
+apply_bootstrap
 enable_firewall
 startdaemon
 important_information
@@ -851,6 +891,7 @@ get_ip
 create_key
 create_config
 wallet_replace
+apply_bootstrap
 enable_firewall
 startdaemon
 important_information
