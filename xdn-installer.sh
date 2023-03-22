@@ -430,7 +430,7 @@ sudo rm -f -r $CONFIGFOLDER/txleveldb
 sudo rm -f $CONFIGFOLDER/blk0001.dat
 cd ~; 
 wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.1/bootstrap.tar.gz
-sudo tar -zvxf XDN_bootstrap.tar.gz --directory $CONFIGFOLDER
+sudo tar -zvxf bootstrap.tar.gz --directory $CONFIGFOLDER
 echo -e "${GREEN} $COIN_NAME Bootstrap Application Complete!!${NC}."
 sleep 10
 fi
