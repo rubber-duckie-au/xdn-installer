@@ -158,54 +158,8 @@ function download_node() {
   sleep 5
   apt update > /dev/null 2>&1
   cd ~
-  sudo apt-get install -y ntp
-  sudo apt-get install -y git
-  sudo apt-get install -y build-essential
-  sudo apt-get install -y libssl-dev
-  sudo apt-get install -y libdb-dev
-  sudo apt-get install -y libdb++-dev
-  sudo apt-get install -y libboost-all-dev
-  sudo apt-get install -y libqrencode-dev
-  sudo apt-get install -y libcurl4-openssl-dev
-  sudo apt-get install -y curl
-  sudo apt-get install -y libzip-dev
-  
-  sudo apt-get update -y
-  
-  sudo apt-get install -y git
-  sudo apt-get install -y make
-  sudo apt-get install -y automake
-  sudo apt-get install -y yasm
-  sudo apt-get install -y binutils
-  sudo apt-get install -y libcurl4-openssl-dev
-  sudo apt-get install -y openssl
-  sudo apt-get install -y libgmp-dev
-  sudo apt-get install -y libtool
-  sudo apt-get install -y qt5-default
-  sudo apt-get install -y qttools5-dev-tools
-  sudo apt-get install -y miniupnpc
-  sudo apt-get install -y qt5-qmake
-  sudo apt-get install -y libevent-dev
+  sudo apt-get install -y wget
 
-  echo -e " "
-  echo -e " "
-  echo -e " "
-  echo -e "${BLUE}================================================================${NC}"
-  echo -e "${GREEN}Building and Linking Dependencies${NC}"
-  echo -e "${BLUE}================================================================${NC}"
-  echo -e " "
-  sleep 5
-  cd ~
-  wget http://download.oracle.com/berkeley-db/db-6.2.32.NC.tar.gz
-  tar zxf db-6.2.32.NC.tar.gz
-  cd db-6.2.32.NC/build_unix
-  ../dist/configure --enable-cxx --disable-shared
-  make
-  sudo make install
-  sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb-6.2.so /usr/lib/libdb-6.2.so
-  sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb_cxx-6.2.so /usr/lib/libdb_cxx-6.2.so
-  export BDB_INCLUDE_PATH="/usr/local/BerkeleyDB.6.2/include"
-  export BDB_LIB_PATH="/usr/local/BerkeleyDB.6.2/lib"
   echo -e " "
   echo -e " "
   echo -e " "
@@ -215,21 +169,12 @@ function download_node() {
   echo -e " "
   sleep 5
   cd ~
-  git clone $COIN_GIT
-  #git clone -b release --single-branch $COIN_GIT
-  echo -e " "
-  echo -e " "
-  echo -e " "
-  echo -e "${BLUE}================================================================${NC}"
-  echo -e "${GREEN}Build DigitalNote Daemon${NC}"
-  echo -e "${BLUE}================================================================${NC}"
-  echo -e " "
-  sleep 5
-  cd ~
-  cd ~/DigitalNote
-  qmake -qt=qt5 DigitalNote.daemon.pro
-  make -j 4
+  wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/DigitalNoted.linux.x86-64
+  mv DigitalNoted.linux.x86-64 DigitalNoted
   sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
+  cd~
+  cd /usr/local/bin
+  chmod +x DigitalNoted
 
 }
 
@@ -484,7 +429,7 @@ sudo rm -f -r $CONFIGFOLDER/database
 sudo rm -f -r $CONFIGFOLDER/txleveldb
 sudo rm -f $CONFIGFOLDER/blk0001.dat
 cd ~; 
-wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.0/XDN_bootstrap.tar.gz
+wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.1/bootstrap.tar.gz
 sudo tar -zvxf XDN_bootstrap.tar.gz --directory $CONFIGFOLDER
 echo -e "${GREEN} $COIN_NAME Bootstrap Application Complete!!${NC}."
 sleep 10
