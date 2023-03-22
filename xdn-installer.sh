@@ -170,6 +170,8 @@ function download_node() {
   sleep 5
   cd ~
   ARCH=$(dpkg --print-architecture)
+  echo -e "Architecture is: "$ARCH
+  sleep 5
   if [[ "$ARCH" = "amd64" ]]
   then
   	PACKAGE='DigitalNoted.linux.x86-64'
