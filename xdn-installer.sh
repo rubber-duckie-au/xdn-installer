@@ -172,7 +172,7 @@ function download_node() {
   wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/DigitalNoted.linux.x86-64
   mv DigitalNoted.linux.x86-64 DigitalNoted
   sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
-  cd~
+  cd ~
   cd /usr/local/bin
   chmod +x DigitalNoted
 
@@ -640,7 +640,6 @@ read -rp "Please select your choice: " opt
 	echo -e "Valid examples are"
 	echo -e "logo"
 	echo -e "important_information"
-	echo -e "configure_systemd"
 	echo -e "preflightchecks"
 	echo -e ""
 	echo -e ""
@@ -803,7 +802,6 @@ function doamasternode() {
 clear
 preflightchecks
 download_node
-configure_systemd
 setup_node
 }
 
