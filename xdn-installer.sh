@@ -510,7 +510,7 @@ fi
 
 function checks() {
 BUILD=$(lsb_release -r)
-if [[ "$BUILD" != *16.04* && "$BUILD" != *18.04* && "$BUILD" != *20.04* ]]
+if [[ "$BUILD" != *16.04* && "$BUILD" != *18.04* && "$BUILD" != *20.04* && "$BUILD" != *22.04* ]]
 then
   	echo -e "You are not running a supported version of Ubuntu. Installation is cancelled."
   	exit 1
