@@ -1,6 +1,6 @@
 #!/bin/bash
 ###
-SCRIPTVER=2.0.0
+SCRIPTVER=2.0.1
 CONFIG_FILE='DigitalNote.conf'
 CONFIGFOLDER=$(eval echo $HOME/.XDN)
 CFFULLPATH=$(eval echo $CONFIGFOLDER/$CONFIG_FILE)
