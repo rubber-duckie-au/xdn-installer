@@ -169,8 +169,21 @@ function download_node() {
   echo -e " "
   sleep 5
   cd ~
-  wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/DigitalNoted.linux.x86-64
-  mv DigitalNoted.linux.x86-64 DigitalNoted
+  ARCH=$(dpkg --print-architecture)
+  if [[ "$ARCH" = "amd64" ]]
+  then
+  	PACKAGE='DigitalNoted.linux.x86-64'
+  fi
+  if [[ "$ARCH" = "arm64" ]]
+  then
+  	PACKAGE='DigitalNoted.linux.arm64'
+  fi
+  if [[ "$ARCH" = "i386" ]]
+  then
+	PACKAGE='DigitalNoted.linux.i386'
+  fi
+  wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/$PACKAGE
+  mv $PACKAGE DigitalNoted
   sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
   cd ~
   cd /usr/local/bin
