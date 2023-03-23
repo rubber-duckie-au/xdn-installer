@@ -110,11 +110,11 @@ SWAPS=$(free -m |tail -n1 |awk '{ print $2 }')
 if [[ $FREEMEM -lt 3096 ]]; then 
 	if [[ $SWAPS -eq 0 ]]; then
 		echo -e "${GREEN}Adding swap${NC}"
-		fallocate -l 3G /swapfile
-		chmod 600 /swapfile
-		mkswap /swapfile
-		swapon /swapfile
-		cp /etc/fstab /etc/fstab.bak
+		sudo fallocate -l 3G /swapfile
+		sudo chmod 600 /swapfile
+		sudo mkswap /swapfile
+		sudo swapon /swapfile
+		sudo cp /etc/fstab /etc/fstab.bak
 		echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 	else
 		echo -e "Got ${WHITE}$SWAPS${GREEN} swap"
@@ -156,10 +156,10 @@ function download_node() {
 
 
   sleep 5
-  apt update > /dev/null 2>&1
+  sudo apt update > /dev/null 2>&1
   cd ~
   sudo apt-get install -y wget
-  sudo apt install net-tools
+  sudo apt-get install -y net-tools
 
   echo -e " "
   echo -e " "
