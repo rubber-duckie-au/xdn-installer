@@ -187,7 +187,7 @@ function download_node() {
   fi
   wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/$PACKAGE
   mv $PACKAGE DigitalNoted
-  cp -r DigitalNoted /usr/local/bin/DigitalNoted
+  sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
   cd ~
   cd /usr/local/bin
   sudo chmod +x DigitalNoted
@@ -517,10 +517,10 @@ then
   	exit 1
 fi
 
-if [[ $EUID -ne 0 ]]; then
-   echo -e "${RED}$0 must be run as root (sudo -i and rerun script).${NC}"
-   exit 1
-fi
+#if [[ $EUID -ne 0 ]]; then
+#   echo -e "${RED}$0 must be run as root (sudo -i and rerun script).${NC}"
+#   exit 1
+#fi
 
 }
 
