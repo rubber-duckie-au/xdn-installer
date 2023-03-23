@@ -124,11 +124,11 @@ if [[ $FREEMEM -lt 3096 ]]; then
 			if [[ $ADDSWAPS -lt 1024 ]]; then 
 				ADDSWAPS=1024
 			fi
-			sudo fallocate -l $ADDSWAPS /swapfile2
-			sudo chmod 600 /swapfile2
-			sudo mkswap /swapfile2
-			sudo swapon /swapfile2
-			sudo cp /etc/fstab /etc/fstab.bak
+			fallocate -l $ADDSWAPS /swapfile2
+			chmod 600 /swapfile2
+			mkswap /swapfile2
+			swapon /swapfile2
+			cp /etc/fstab /etc/fstab.bak
 			echo '/swapfile2 none swap sw 0 0' | sudo tee -a /etc/fstab
 		fi 
 		echo -e "${WHITE}And thats enough swap that compile should work"
@@ -156,10 +156,10 @@ function download_node() {
 
 
   sleep 5
-  sudo apt update > /dev/null 2>&1
+  apt update > /dev/null 2>&1
   cd ~
   sudo apt-get install -y wget
-  sudo apt-get install -y net-tools
+  sudo apt install net-tools
 
   echo -e " "
   echo -e " "
