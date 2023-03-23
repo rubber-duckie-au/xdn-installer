@@ -159,6 +159,7 @@ function download_node() {
   apt update > /dev/null 2>&1
   cd ~
   sudo apt-get install -y wget
+  sudo apt install net-tools
 
   echo -e " "
   echo -e " "
@@ -186,10 +187,10 @@ function download_node() {
   fi
   wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/$PACKAGE
   mv $PACKAGE DigitalNoted
-  sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
+  cp -r DigitalNoted /usr/local/bin/DigitalNoted
   cd ~
   cd /usr/local/bin
-  chmod +x DigitalNoted
+  sudo chmod +x DigitalNoted
 
 }
 
