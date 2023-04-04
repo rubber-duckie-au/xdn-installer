@@ -8,3 +8,4 @@ git clone https://github.com/rubber-duckie-au/xdn-installer.git
 cd xdn-installer
 bash xdn-installer.sh
 ```
+NOTE: Script can now support installing of additional MNs on the same server - MUST BE RUN UNDER A DIFFERENT USER (I know there is other ways, but this is what this script does...)
