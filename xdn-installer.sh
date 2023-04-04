@@ -1,6 +1,6 @@
 #!/bin/bash
 ###
-SCRIPTVER=2.0.1
+SCRIPTVER=2.0.2
 CONFIG_FILE='DigitalNote.conf'
 CONFIGFOLDER=$(eval echo $HOME/.XDN)
 CFFULLPATH=$(eval echo $CONFIGFOLDER/$CONFIG_FILE)
@@ -16,6 +16,11 @@ STARTCMD=$(eval echo $COIND_COMMAND)
 STOPCMD=$(eval echo $COIND_COMMAND stop)
 PFile=$(eval echo $CONFIGFOLDER/$COIN_NAME.pid)
 NODEIP=$(curl -s4 icanhazip.com)
+DO_DAEMON=true
+LEAVE_CONFIG=false
+REVERT_443=false
+REVERT_80=false
+BOOTSTRAP_ONLY=false
 WHITE="\033[0;37m"
 BLUE="\033[0;34m"
 YELLOW="\033[0;33m"
@@ -67,36 +72,34 @@ BgLtMagenta='\E[105m'
 BgLtCyan='\E[106m'
 BgLtWhite='\E[107m'
 
-
 function purgeOldInstallation() {
-echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
-if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
-    echo -e "Exists, making backup${NC}" 
-if [[ ! -d $(eval echo $COIN_BACKUP) ]]; then    
-mkdir $(eval echo $COIN_BACKUP)
-fi
-    cp  $(eval echo $CFFULLPATH $COIN_BACKUP ) 2> /dev/null
-    cp  $(eval echo $CONFIGFOLDER/DigitalNote.conf $COIN_BACKUP ) 2> /dev/null
-    cp $(eval echo $CONFIGFOLDER/wallet.dat $COIN_BACKUP ) 2> /dev/null
-fi
-    #kill wallet daemon
-    $COIN_DAEMON stop > /dev/null 2>&1
-    #sudo killall $COIN_DAEMON > /dev/null 2>&1
-	# Save Key
-	if [[ ! $JUSTWALLET ]]; then
+if [ $LEAVE_CONFIG=false ]; then
+    echo -e "${GREEN}Searching and removing old $COIN_NAME files and making a config backup to $HOME/DigitalNoteBackup if they exist ${NC}"
+    if [[ -f $(eval echo $CONFIGFOLDER/wallet.dat) ]]; then
+        echo -e "Exists, making backup${NC}" 
+        if [[ ! -d $(eval echo $COIN_BACKUP) ]]; then    
+            mkdir $(eval echo $COIN_BACKUP)
+        fi
+        cp  $(eval echo $CFFULLPATH $COIN_BACKUP ) 2> /dev/null
+        cp $(eval echo $CONFIGFOLDER/wallet.dat $COIN_BACKUP ) 2> /dev/null
+    fi
+
+#Save Key
+    if [ ! $JUSTWALLET=true ]; then
 	OLDKEY=$(awk -F'=' '/masternodeprivkey/ {print $2}' $CFFULLPATH 2> /dev/null)
 	if [[ $OLDKEY ]]; then
-    		echo -e "${CYAN}Saving Old Installation Genkey ${WHITE} $OLDKEY"
-	fi
-	fi
-    #remove old ufw port allow
-    sudo ufw delete allow $COIN_PORT/tcp > /dev/null 2>&1
-    #remove old files
-    #sudo rm -rf $CONFIGFOLDER > /dev/null 2>&1
+    	    echo -e "${CYAN}Saving Old Installation Genkey ${WHITE} $OLDKEY"
+        fi
+    fi
+fi
+    #kill wallet daemon for current user
+$COIN_DAEMON stop > /dev/null 2>&1
+if [[ $DO_DAEMON ]]; then
     sudo rm -rf /usr/local/bin/$COIN_DAEMON > /dev/null 2>&1
-    [ -d $CONFIGFOLDER  ] || mkdir $CONFIGFOLDER 
-    sudo rm -rf ~/DigitalNote
-	sudo rm -f db-6.2.32.NC.tar.gz*
+fi
+[ -d $CONFIGFOLDER  ] || mkdir $CONFIGFOLDER 
+sudo rm -rf ~/DigitalNote
+sudo rm -f db-6.2.32.NC.tar.gz*
 echo -e "${GREEN}* Done${NONE}";
 }
 
@@ -160,7 +163,7 @@ function download_node() {
   cd ~
   sudo apt-get install -y wget
   sudo apt-get install -y net-tools
-
+if [ $DO_DAEMON ]; then
   echo -e " "
   echo -e " "
   echo -e " "
@@ -173,39 +176,64 @@ function download_node() {
   ARCH=$(dpkg --print-architecture)
   echo -e "Architecture is: "$ARCH
   sleep 5
-  if [[ "$ARCH" = "amd64" ]]
-  then
+  if [[ "$ARCH" = "amd64" ]]; then
   	PACKAGE='DigitalNoted.linux.x86-64'
   fi
-  if [[ "$ARCH" = "arm64" ]]
-  then
+  if [[ "$ARCH" = "arm64" ]]; then
   	PACKAGE='DigitalNoted.linux.arm64'
   fi
-  if [[ "$ARCH" = "i386" ]]
-  then
+  if [[ "$ARCH" = "i386" ]]; then
 	PACKAGE='DigitalNoted.linux.i386'
   fi
+echo -e "Checking UFW status."
+sudo ufw status | grep -w active
+if [ "$?" -eq "0" ]; then
+  echo -e "$UFW Active, checking open ports for HTTP and HTTPS"
+  sudo ufw status | grep -c "^443\s\+ALLOW"
+   if [ "$?" -eq "1" ]; then
+	sudo ufw allow 443
+        REVERT_443=true
+   fi
+  sudo ufw status | grep -c "^80\s\+ALLOW"
+   if [ "$?" -eq "1" ]; then
+	sudo ufw allow 80
+        REVERT_80=true
+   fi
+fi
+
   wget https://github.com/DigitalNoteXDN/DigitalNote-2/releases/download/v2.0.0.6/$PACKAGE
+if [ $REVERT_443=true ]; then 
+	sudo ufw delete allow 443
+fi
+if [ $REVERT_80=true ]; then 
+	sudo ufw delete allow 80
+fi
+REVERT_80=false
+REVERT_443=false
+
+
   mv $PACKAGE DigitalNoted
   sudo cp -r DigitalNoted /usr/local/bin/DigitalNoted
   cd ~
   cd /usr/local/bin
   sudo chmod +x DigitalNoted
-
+  cd ~
+  rm -f DigitalNoted
+fi
 }
 
 function stopdaemon() {
 
 DAEMONPID=$(pidof DigitalNoted)
 
-if [[ -z $DAEMONPID ]]; then
+if [ -z $DAEMONPID ]; then
 echo -e "Daemon not currently running, Good!"
 else
 echo -e "Stopping running daemon"
 $COIN_DAEMON stop > /dev/null 2>&1
 sleep 10
-kill -9 $DAEMONPID > /dev/null 2>&1
-kill -15 $DAEMONPID > /dev/null 2>&1
+#kill -9 $DAEMONPID > /dev/null 2>&1
+#kill -15 $DAEMONPID > /dev/null 2>&1
 fi
 
 }
@@ -216,7 +244,7 @@ function startdaemon() {
 
 
   if [[ -z "$(ps axo cmd:100 | egrep $COIN_DAEMON)" ]]; then
-    echo -e "${RED}$COIN_NAME is not running${NC}, please investigate. You should start by running the following commands as root:"
+    echo -e "${RED}$COIN_NAME is not running${NC}, please investigate. You should start by running the following commands:"
     echo -e "${GREEN}$COIN_DAEMON"
     echo -e "$COIN_DAEMON getinfo"
     exit 1
@@ -275,7 +303,7 @@ daemon=1
 testnet=0
 rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
-rpcport=18094
+rpcport=$RPC_PORT
 port=$COIN_PORT
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
@@ -326,8 +354,7 @@ echo -e "${YELLOW}Enter your ${RED}$COIN_NAME RPC Username${NC}."
 echo -e "${WHITE}Please create a RPC Username to use for this Daemon"
 echo -e "If left blank, once will be created for you"
 read -rp "RPC Username: " RPCUSER
-if [[ ($RPCUSER == "") ]]
-then
+if [[ ($RPCUSER == "") ]]; then
 	RPCUSER=$(openssl rand -hex 11)
 fi
   echo -e " "
@@ -345,7 +372,7 @@ fi
 
 
 RPCPORT=$(netstat --listening -n |grep $RPC_PORT)
-if [[ ! -z RPCPORT ]]; then
+if [ ! -z RPCPORT ]; then
 echo -e "Port $RPC_PORT is clear!"
 else
 echo -e "Something is listening on the RPC Port: $RPC_PORT."
@@ -361,7 +388,7 @@ server=1
 testnet=0
 rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
-rpcport=18094
+rpcport=$RPC_PORT
 port=$COIN_PORT
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
@@ -393,7 +420,7 @@ echo -e "Done"
 }
 
 function create_key() {
-if [[ $OLDKEY ]]; then
+if [ $OLDKEY ]; then
   echo -e " "
   echo -e " "
   echo -e " "
@@ -411,11 +438,11 @@ else
 fi
 fi
 
-	if [[ ! $OLDKEY ]]; then 
+	if [ ! $OLDKEY ]; then 
 		clear
 		echo -e " "
 		echo -e "${RED}$COIN_NAME ${YELLOW}Masternode GENKEY Input${NC}."
-		while [[ -z "$COINKEY" ]]; do
+		while [ -z "$COINKEY" ]; do
 		echo -e "============================================================="
 		echo -e "${YELLOW}Enter your new ${RED}$COIN_NAME ${YELLOW}Masternode GENKEY${NC}."
 		echo -e "${WHITE}Please start your local wallet and go to"
@@ -440,15 +467,41 @@ echo -e " "
 echo -e " "
 read -rp "Apply Blockchain Bootstrap? [Y/n]: " bootstrap_apply
  if [[ ("$bootstrap_apply" == "y" || "$bootstrap_apply" == "Y" || "$bootstrap_apply" == "") ]]; then
+
+echo -e "Checking UFW status."
+sudo ufw status | grep -w active
+if [ "$?" -eq "0" ]; then
+  echo -e "$UFW Active, checking open ports for HTTP and HTTPS"
+  sudo ufw status | grep -c "^443\s\+ALLOW"
+   if [ "$?" -eq "1" ]; then
+	sudo ufw allow 443
+        REVERT_443=true
+   fi
+  sudo ufw status | grep -c "^80\s\+ALLOW"
+   if [ "$?" -eq "1" ]; then
+	sudo ufw allow 80
+        REVERT_80=true
+   fi
+fi
+
 sudo rm -f -r $CONFIGFOLDER/blocks
 sudo rm -f -r $CONFIGFOLDER/database
 sudo rm -f -r $CONFIGFOLDER/txleveldb
 sudo rm -f $CONFIGFOLDER/blk0001.dat
 cd ~; 
-wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.1/bootstrap.tar.gz
+wget https://github.com/rubber-duckie-au/xdn-installer/releases/download/v2.0.1/bootstrap.tar.gz -O bootstrap.tar.gz
 sudo tar -zvxf bootstrap.tar.gz --directory $CONFIGFOLDER
 echo -e "${GREEN} $COIN_NAME Bootstrap Application Complete!!${NC}."
 sleep 10
+rm -f bootstrap.tar.gz
+if [ $REVERT_443=true ]; then 
+	sudo ufw delete allow 443
+fi
+if [ $REVERT_80=true ]; then 
+	sudo ufw delete allow 80
+fi
+REVERT_80=false
+REVERT_443=false
 fi
 sudo chown -R $USER:$USER $CONFIGFOLDER
 
@@ -471,6 +524,8 @@ function enable_firewall() {
   sudo ufw allow ftp;
   sudo ufw limit ftp/tcp  comment "Rate limit for ftp server";
   sudo ufw allow $COIN_PORT/tcp comment "$COIN_NAME MN port";
+  sudo ufw allow http;
+  sudo ufw allow https;
   sudo ufw logging on;
   sudo ufw --force enable;
 }
@@ -526,7 +581,7 @@ fi
 
 
 function important_information() {
-if [ $JUSTWALLET ]; then
+if [ $JUSTWALLET = true ]; then
  INSTALLER="Wallet"
 else
  INSTALLER="Masternode"
@@ -541,7 +596,7 @@ fi
  echo -e "${GREEN}Start: ${NC}${PURPLEB}$COIN_DAEMON${NC}"
  echo -e "${GREEN}Stop: ${NC}${PURPLEB}$COIN_DAEMON stop${NC}"
  echo -e "${GREEN}VPS_IP:PORT ${NC}${PURPLEB}$NODEIP:$COIN_PORT${NC}"
-if [ ! $JUSTWALLET ]; then
+if [ ! $JUSTWALLET = true ]; then
 if [[ ! $OLDKEY ]]; then
  echo -e "${GREEN}***NEW*** MASTERNODE GENKEY is: ${NC}${PURPLEB}$COINKEY${NC}"
 else
@@ -613,7 +668,8 @@ echo -e " "
  echo -e "${GREEN}1:${NC}${FgLtYellow} Install / Update Masternode${NC}"
  echo -e "${GREEN}2:${NC}${FgLtYellow} Install NTP Service (Optional but reccommended)${NC}"
  echo -e "${GREEN}3:${NC}${FgLtYellow} Just install wallet cli${NC}"
- echo -e "${GREEN}4:${NC}${FgLtYellow} Quit and get me out of here${NC}"
+ echo -e "${GREEN}4:${NC}${FgLtYellow} Just redo the chain (apply updated bootstrap only to this user)${NC}"
+ echo -e "${GREEN}5:${NC}${FgLtYellow} Quit and get me out of here${NC}"
  echo -e "${BLUE}================================================================${NC}"
 }
 
@@ -628,7 +684,7 @@ read -rp "Please select your choice: " opt
     case $opt in
         "1")
             echo "Lets do a masternode!";
-	doamasternode
+	mnmenu2
 	    echo -e "${Underline}Masternode Setup ${Blink}${UGREEN}Complete${Off}$!!!"
             read -rp "Press any key to return to main menu" pause
             echo -e "${NC}Returning you to the shell"
@@ -646,6 +702,11 @@ read -rp "Please select your choice: " opt
             echo -e "${NC}Returning you to the shell"
 	    ;;
         "4")
+         echo "Apply new boostrap";
+         BOOTSTRAP_ONLY=true
+         bootstraponly
+	;;
+        "5")
             echo "Returning you to the shell";
 	shouldloop=false;
 	break
@@ -667,6 +728,76 @@ read -rp "Please select your choice: " opt
     esac
 done
 }
+
+function mnmenu() {
+clear
+echo -e " "
+ echo -e "${BLUE}================================================================${NC}"
+ echo -e "${WHITE}Masternode Menu"
+ echo -e "${BLUE}===================${WHITE}Here are your options${BLUE}========================${NC}"
+ echo -e "${GREEN}1:${NC}${FgLtYellow} First time Masternode install on this server${NC}"
+ echo -e "${GREEN}2:${NC}${FgLtYellow} Update the daemon running on this server (new daemon install, add new bootstrap)${NC}"
+ echo -e "${GREEN}3:${NC}${FgLtYellow} Additional Masternode install under the current user - one per user ONLY (Leave daemon alone, just add config folder)${NC}"
+ echo -e "${GREEN}4:${NC}${FgLtYellow} Just redo the chain (apply updated bootstrap only to this user)${NC}"
+ echo -e "${GREEN}5:${NC}${FgLtYellow} Quit back to main menu${NC}"
+ echo -e "${BLUE}================================================================${NC}"
+}
+
+function mnmenu2 {
+shouldloop=true;
+while $shouldloop; do
+mnmenu
+read -rp "Please select your choice: " mnopt
+
+    case $mnopt in
+        "1")
+            echo "Lets do a first time masternode!";
+	LEAVE_CONFIG=false;
+	DO_DAEMON=true;
+	doamasternode
+	    echo -e "${Underline}Masternode Setup ${Blink}${UGREEN}Complete${Off}$!!!"
+            read -rp "Press any key to return to main menu" pause
+            echo -e "${NC}Returning you to the shell"
+	    ;;
+        "2")
+            echo "Update an existing Masternode daemon version";
+	LEAVE_CONFIG=true;
+	DO_DAEMON=true;
+	doamasternode
+	    read -rp "Press any key to return to main menu" pause
+	    mainmenu2
+         ;;
+	    "3")
+            echo "Additional Masternode";
+	LEAVE_CONFIG=false;
+	DO_DAEMON=false;
+	echo -e "${YELLOW}Enter a new ${RED}$COIN_NAME Masternode Port${NC}."
+	echo -e "${WHITE}type a new port for this masternode instance (different from the other masternodes on this server) "
+	echo -e "We suggest a port in range 18095-18999"
+	read -rp "Please Enter New Masternode Port: " COIN_PORT
+	doamasternode
+	    echo -e "${Underline}CLI Wallet Setup ${Blink}${UGREEN}Complete${Off}$!!!"
+            read -rp "Press any key to return to main menu" pause
+            mainmenu2
+	    ;;
+        "4")
+            echo "Apply new boostrap";
+	BOOTSTRAP_ONLY=true
+	bootstraponly
+	    read -rp "Press any key to return to main menu" pause
+            mainmenu2
+         ;;
+        "5")
+	    mainmenu2
+	shouldloop=false;
+	break
+	exit
+	;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+}
+
 
 function addNTPService() {
 clear
@@ -812,6 +943,9 @@ else
 fi
 }
 
+function bootstraponly() {
+apply_bootstrap
+}
 
 function doamasternode() {
 
@@ -859,5 +993,4 @@ important_information
 
 ##### Main #####
 mainmenu2
-
 
