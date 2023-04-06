@@ -944,7 +944,9 @@ fi
 }
 
 function bootstraponly() {
+stopdaemon
 apply_bootstrap
+startdaemon
 }
 
 function doamasternode() {
